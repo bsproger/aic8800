@@ -4155,8 +4155,10 @@ static int rwnx_cfg80211_set_tx_power(struct wiphy *wiphy,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 8, 0)
  struct wireless_dev *wdev,
 #endif
-#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 17, 0)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 14, 0)
                                       enum nl80211_tx_power_setting type, int mbm)
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(6, 17, 0)
+                                      unsigned int link_id, enum nl80211_tx_power_setting type, int mbm)
 #else
                                       int radio_idx, enum nl80211_tx_power_setting type, int mbm)
 #endif

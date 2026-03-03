@@ -189,8 +189,10 @@ static void aicwf_netif_timer(struct timer_list *t)
 {
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0)
 		struct aic_pci_dev *pcidev = (struct aic_pci_dev *) data;
-#else
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
 		struct aic_pci_dev *pcidev = from_timer(pcidev, t, netif_timer);
+#else
+		struct aic_pci_dev *pcidev = timer_container_of(pcidev, t, netif_timer);
 #endif
 
 	if (!work_pending(&pcidev->netif_work))
@@ -245,8 +247,10 @@ static void aicwf_temp_ctrl_timer(struct timer_list *t)
 {
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 14, 0)
 	struct aic_pci_dev *pcidev = (struct aic_pci_dev *) data;
-#else
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
 	struct aic_pci_dev *pcidev = from_timer(pcidev, t, tp_ctrl_timer);
+#else
+	struct aic_pci_dev *pcidev = timer_container_of(pcidev, t, tp_ctrl_timer);
 #endif
 
 	if (!work_pending(&pcidev->tp_ctrl_work))

@@ -450,12 +450,23 @@ typedef __s64 time64_t;
 #include <linux/kernel.h>
 #define from_timer(var, callback_timer, timer_fieldname) \
 	container_of(callback_timer, typeof(*var), timer_fieldname)
+#elif LINUX_VERSION_CODE >= KERNEL_VERSION(6, 16, 0)
+#define from_timer(var, callback_timer, timer_fieldname) \
+	timer_container_of(var, callback_timer, timer_fieldname)
 #endif
 
 /* Timer function name changes in newer kernels */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
 #define del_timer timer_delete
 #define del_timer_sync timer_delete_sync
+#endif
+
+/* cfg80211 API changes in newer kernels */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 17, 0)
+#define cfg80211_rx_spurious_frame(dev, addr, gfp) \
+	cfg80211_rx_spurious_frame(dev, addr, 0, gfp)
+#define cfg80211_rx_unexpected_4addr_frame(dev, addr, gfp) \
+	cfg80211_rx_unexpected_4addr_frame(dev, addr, 0, gfp)
 #endif
 
 #endif /* _RWNX_COMPAT_H_ */

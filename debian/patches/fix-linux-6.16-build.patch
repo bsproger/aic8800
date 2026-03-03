@@ -201,33 +201,3 @@ index 3ab130a..6a936ca 100644
  #endif
  
  	if (sdiodev->bus_if->state == BUS_DOWN_ST) {
-diff --git a/src/USB/driver_fw/drivers/aic8800/aic8800_fdrv/rwnx_wakelock.c b/src/USB/driver_fw/drivers/aic8800/aic8800_fdrv/rwnx_wakelock.c
-index 90e7ad8..9e96057 100644
---- a/src/USB/driver_fw/drivers/aic8800/aic8800_fdrv/rwnx_wakelock.c
-+++ b/src/USB/driver_fw/drivers/aic8800/aic8800_fdrv/rwnx_wakelock.c
-@@ -11,10 +11,14 @@
- 
- struct wakeup_source *rwnx_wakeup_init(const char *name)
- {
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
- 	struct wakeup_source *ws;
- 	ws = wakeup_source_create(name);
- 	wakeup_source_add(ws);
- 	return ws;
-+#else
-+	return NULL;
-+#endif
- }
- 
- void rwnx_wakeup_deinit(struct wakeup_source *ws)
-@@ -21,8 +23,10 @@ void rwnx_wakeup_deinit(struct wakeup_source *ws)
- {
- 	if (ws && ws->active)
- 		__pm_relax(ws);
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 16, 0)
- 	wakeup_source_remove(ws);
- 	wakeup_source_destroy(ws);
-+#endif
- }
- 
- struct wakeup_source *rwnx_wakeup_register(struct device *dev, const char *name)

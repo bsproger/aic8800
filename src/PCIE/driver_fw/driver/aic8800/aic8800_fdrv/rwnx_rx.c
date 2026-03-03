@@ -888,6 +888,7 @@ static void rwnx_rx_add_rtap_hdr(struct rwnx_hw *rwnx_hw,
 	bool short_gi = false;
 	bool stbc = false;
 	bool aggregation = false;
+	int n_extra_it_present = 0;
 
 	rtap = (struct ieee80211_radiotap_header *)skb_push(skb, rtap_len);
 	memset((u8 *) rtap, 0, rtap_len);
@@ -909,6 +910,7 @@ static void rwnx_rx_add_rtap_hdr(struct rwnx_hw *rwnx_hw,
 				BIT(IEEE80211_RADIOTAP_RADIOTAP_NAMESPACE);
 			put_unaligned_le32(it_present_val, it_present);
 			it_present++;
+			n_extra_it_present++;
 			it_present_val = BIT(IEEE80211_RADIOTAP_ANTENNA) |
 							 BIT(IEEE80211_RADIOTAP_DBM_ANTSIGNAL);
 		}
@@ -920,11 +922,14 @@ static void rwnx_rx_add_rtap_hdr(struct rwnx_hw *rwnx_hw,
 						  BIT(IEEE80211_RADIOTAP_EXT);
 		put_unaligned_le32(it_present_val, it_present);
 		it_present++;
+		n_extra_it_present++;
 		it_present_val = vend_it_present;
 	}
 
 	put_unaligned_le32(it_present_val, it_present);
-	pos = (void *)(it_present + 1);
+	/* Derive pos from rtap (whole buffer) rather than it_present (struct field)
+	 * to avoid the fortify "detected write beyond size of field" warning */
+	pos = (u8 *)rtap + sizeof(*rtap) + n_extra_it_present * sizeof(*it_present);
 
 	// IEEE80211_RADIOTAP_TSFT
 	if (hwvect) {

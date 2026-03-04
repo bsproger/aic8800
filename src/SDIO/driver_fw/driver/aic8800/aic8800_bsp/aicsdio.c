@@ -68,6 +68,7 @@ module_param_string(saved_sdk_ver, saved_sdk_ver,64, 0660);
 #endif
 
 extern int testmode;
+extern int adap_test;
 
 
 #define SDIO_DEVICE_ID_AIC8801_FUNC2	0x0146
@@ -1993,6 +1994,14 @@ int get_testmode(void){
 	return testmode;
 }
 
+void set_testmode(int val){
+	testmode = val;
+}
+
+int get_adap_test(void){
+	return adap_test;
+}
+
 struct sdio_func *get_sdio_func(void){
     return aicbsp_sdiodev->func;
 }
@@ -2027,6 +2036,8 @@ uint8_t crc8_ponl_107(uint8_t *p_buffer, uint16_t cal_size)
 
 EXPORT_SYMBOL(get_fw_path);
 EXPORT_SYMBOL(get_testmode);
+EXPORT_SYMBOL(set_testmode);
+EXPORT_SYMBOL(get_adap_test);
 EXPORT_SYMBOL(get_sdio_func);
 EXPORT_SYMBOL(set_irq_handler);
 

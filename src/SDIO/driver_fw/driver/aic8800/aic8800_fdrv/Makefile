@@ -402,7 +402,8 @@ endif
 
 all: modules
 modules:
-	make -C $(KDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) modules
+	make -C $(KDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		KBUILD_EXTRA_SYMBOLS="$(wildcard $(PWD)/../aic8800_bsp/Module.symvers)" modules
 
 install:
 	mkdir -p $(MODDESTDIR)

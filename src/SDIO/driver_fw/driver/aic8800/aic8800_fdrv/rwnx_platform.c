@@ -948,11 +948,13 @@ void get_userconfig_txpwr_idx(txpwr_idx_conf_t *txpwr_idx)
 {
 	memcpy(txpwr_idx, &(nvram_info.txpwr_idx), sizeof(txpwr_idx_conf_t));
 }
+EXPORT_SYMBOL(get_userconfig_txpwr_idx);
 
 void get_userconfig_txpwr_ofst(txpwr_ofst_conf_t *txpwr_ofst)
 {
 	memcpy(txpwr_ofst, &(nvram_info.txpwr_ofst), sizeof(txpwr_ofst_conf_t));
 }
+EXPORT_SYMBOL(get_userconfig_txpwr_ofst);
 
 void get_userconfig_xtal_cap(xtal_cap_conf_t *xtal_cap)
 {
